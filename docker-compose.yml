@@ -41,5 +41,5 @@ volumes:
 
 x-deploy:
   git:
-    repository: <YOUR_GIT_REPO_URL>
+    repository: https://github.com/zxarr/cmdb-project
     branch: main
