@@ -5,6 +5,11 @@ services:
     build: .
     pull_policy: build
     container_name: cmdb_web
+    environment:
+      MYSQL_DATABASE: cmdb
+      MYSQL_USER: cmdb_user
+      MYSQL_PASSWORD: dbpassone
+      MYSQL_HOST: db
     ports:
       - "8084:80"
     depends_on:
@@ -19,6 +24,7 @@ services:
       MYSQL_DATABASE: cmdb
       MYSQL_USER: cmdb_user
       MYSQL_PASSWORD: dbpassone
+      MYSQL_HOST: db
     ports:
       - "3316:3306"
     volumes:

@@ -1,9 +1,9 @@
 <?php
 // Retrieve DB credentials from environment variables
-$host = getenv('DB_HOST') ?: 'localhost';
-$dbname = getenv('DB_NAME') ?: 'cmdb';
-$user = getenv('DB_USER') ?: 'root';
-$pass = getenv('DB_PASS') ?: '';
+$host = getenv('MYSQL_HOST') ?: 'db';
+$dbname = getenv('MYSQL_DATABASE') ?: 'cmdb';
+$user = getenv('MYSQL_USER') ?: 'root';
+$pass = getenv('MYSQL_PASSWORD') ?: '';
 
 // Database Connection
 try {

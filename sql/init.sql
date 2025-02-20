@@ -1,13 +1,24 @@
 CREATE DATABASE IF NOT EXISTS cmdb;
 USE cmdb;
 
-CREATE TABLE ci_types (
+-- Ensure the user is created if it does not exist
+CREATE USER IF NOT EXISTS 'cmdb_user'@'%' IDENTIFIED BY 'cmdb_pass';
+
+-- Grant all necessary privileges to the user
+GRANT ALL PRIVILEGES ON cmdb.* TO 'cmdb_user'@'%';
+
+-- Apply changes
+FLUSH PRIVILEGES;
+
+-- Table for storing CI types
+CREATE TABLE IF NOT EXISTS ci_types (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL UNIQUE,
     description TEXT
 );
 
-CREATE TABLE configuration_items (
+-- Table for storing Configuration Items (CIs)
+CREATE TABLE IF NOT EXISTS configuration_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     ci_type_id INT,
@@ -25,7 +36,8 @@ CREATE TABLE configuration_items (
     FOREIGN KEY (ci_type_id) REFERENCES ci_types(id) ON DELETE SET NULL
 );
 
-CREATE TABLE ci_notes (
+-- Table for storing notes with timestamps
+CREATE TABLE IF NOT EXISTS ci_notes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     ci_id INT NOT NULL,
     note TEXT NOT NULL,
