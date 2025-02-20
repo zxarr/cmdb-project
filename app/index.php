@@ -1,54 +1,3 @@
-<?php
-// Database Connection
-$host = 'localhost';
-$dbname = 'cmdb';
-$user = 'root';
-$pass = '';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
-}
-
-// Handle adding a new configuration item
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'], $_POST['ci_type_id'], $_POST['owner'])) {
-    $stmt = $pdo->prepare("INSERT INTO configuration_items 
-        (name, ci_type_id, description, status, owner, location, ip_address, os_version, serial_number, vendor, purchase_date, warranty_expiry) 
-        VALUES (?, ?, ?, 'Active', ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([
-        $_POST['name'], 
-        $_POST['ci_type_id'], 
-        $_POST['description'], 
-        $_POST['owner'],
-        $_POST['location'],
-        $_POST['ip_address'],
-        $_POST['os_version'],
-        $_POST['serial_number'],
-        $_POST['vendor'],
-        $_POST['purchase_date'],
-        $_POST['warranty_expiry']
-    ]);
-    header("Location: index.php");
-    exit;
-}
-
-// Handle adding a new note
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_note'], $_POST['ci_id'], $_POST['note'])) {
-    $stmt = $pdo->prepare("INSERT INTO ci_notes (ci_id, note) VALUES (?, ?)");
-    $stmt->execute([$_POST['ci_id'], $_POST['note']]);
-    header("Location: index.php");
-    exit;
-}
-
-// Fetch configuration items
-$items = $pdo->query("SELECT ci.id, ci.name, ct.name as type, ci.status FROM configuration_items ci JOIN ci_types ct ON ci.ci_type_id = ct.id ORDER BY ci.id DESC")->fetchAll(PDO::FETCH_ASSOC);
-
-// Fetch CI types for dropdown
-$ci_types = $pdo->query("SELECT * FROM ci_types")->fetchAll(PDO::FETCH_ASSOC);
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -127,3 +76,56 @@ $ci_types = $pdo->query("SELECT * FROM ci_types")->fetchAll(PDO::FETCH_ASSOC);
     </table>
 </body>
 </html>
+
+
+<?php
+// Database Connection
+$host = getenv('DB_HOST') ?: 'localhost';
+$dbname = getenv('DB_NAME') ?: 'cmdb';
+$user = getenv('DB_USER') ?: 'root';
+$pass = getenv('DB_PASS') ?: '';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Database connection failed: " . $e->getMessage());
+}
+
+// Handle adding a new configuration item
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'], $_POST['ci_type_id'], $_POST['owner'])) {
+    $stmt = $pdo->prepare("INSERT INTO configuration_items 
+        (name, ci_type_id, description, status, owner, location, ip_address, os_version, serial_number, vendor, purchase_date, warranty_expiry) 
+        VALUES (?, ?, ?, 'Active', ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([
+        $_POST['name'], 
+        $_POST['ci_type_id'], 
+        $_POST['description'], 
+        $_POST['owner'],
+        $_POST['location'],
+        $_POST['ip_address'],
+        $_POST['os_version'],
+        $_POST['serial_number'],
+        $_POST['vendor'],
+        $_POST['purchase_date'],
+        $_POST['warranty_expiry']
+    ]);
+    header("Location: index.php");
+    exit;
+}
+
+// Handle adding a new note
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_note'], $_POST['ci_id'], $_POST['note'])) {
+    $stmt = $pdo->prepare("INSERT INTO ci_notes (ci_id, note) VALUES (?, ?)");
+    $stmt->execute([$_POST['ci_id'], $_POST['note']]);
+    header("Location: index.php");
+    exit;
+}
+
+// Fetch configuration items
+$items = $pdo->query("SELECT ci.id, ci.name, ct.name as type, ci.status FROM configuration_items ci JOIN ci_types ct ON ci.ci_type_id = ct.id ORDER BY ci.id DESC")->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch CI types for dropdown
+$ci_types = $pdo->query("SELECT * FROM ci_types")->fetchAll(PDO::FETCH_ASSOC);
+?>
+
