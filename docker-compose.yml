@@ -10,7 +10,7 @@ services:
       MYSQL_PASSWORD: dbpassone
       MYSQL_HOST: db
     ports:
-      - "8084:80"
+      - "80:80"
     depends_on:
       - db
 
@@ -25,7 +25,7 @@ services:
       MYSQL_PASSWORD: dbpassone
       MYSQL_HOST: db
     ports:
-      - "3316:3306"
+      - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -35,7 +35,7 @@ services:
     container_name: cmdb_phpmyadmin
     restart: always
     ports:
-      - "8085:80"
+      - "8080:80"
     environment:
       PMA_HOST: db
       MYSQL_ROOT_PASSWORD: hardware123
