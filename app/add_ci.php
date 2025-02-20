@@ -48,7 +48,8 @@ $ci_types = $pdo->query("SELECT * FROM ci_types")->fetchAll(PDO::FETCH_ASSOC);
     <h2>Add New Configuration Item</h2>
     
     <form method="POST">
-        <select name="name" placeholder="Item Name" required>
+        <input type="text" name="name" placeholder="Item Name" required>
+        <select name="ci_type_id" required>
             <option value="Server">Server</option>
             <option value="Appliance">Appliance</option>
             <?php foreach ($ci_types as $type) { ?>
