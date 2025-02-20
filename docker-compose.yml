@@ -6,8 +6,8 @@ services:
     container_name: cmdb_web
     ports:
       - "8084:80"
-    volumes:
-      - ./app:/var/www/html
+#    volumes:
+#      - ./app:/var/www/html
     depends_on:
       - db
 
