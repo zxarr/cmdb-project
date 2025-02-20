@@ -5,8 +5,8 @@ services:
     build: .
     pull_policy: build
     container_name: cmdb_web
-    volumes:
-      - ./app:/var/www/html 
+#    volumes:
+#      - ./app:/var/www/html 
     ports:
       - "8084:80"
     depends_on:
