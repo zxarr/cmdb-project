@@ -4,6 +4,8 @@ services:
   web:
     build: .
     container_name: cmdb_web
+    volumes:
+      - ./app:/var/www/html 
     ports:
       - "8084:80"
     pull_policy: always
