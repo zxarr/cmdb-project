@@ -6,6 +6,7 @@ services:
     container_name: cmdb_web
     ports:
       - "8084:80"
+    pull_policy: always
     depends_on:
       - db
 
