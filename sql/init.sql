@@ -3,11 +3,7 @@ USE cmdb;
 
 -- Ensure the user is created if it does not exist
 CREATE USER IF NOT EXISTS 'cmdb_user'@'%' IDENTIFIED BY 'cmdb_pass';
-
--- Grant all necessary privileges to the user
 GRANT ALL PRIVILEGES ON cmdb.* TO 'cmdb_user'@'%';
-
--- Apply changes
 FLUSH PRIVILEGES;
 
 -- Table for storing CI types
@@ -32,6 +28,13 @@ CREATE TABLE IF NOT EXISTS configuration_items (
     vendor VARCHAR(255) NULL,
     purchase_date DATE NULL,
     warranty_expiry DATE NULL,
+    ci_category ENUM('Physical', 'Virtual') NOT NULL,
+    contract VARCHAR(255) NULL,
+    os_type VARCHAR(100) NULL,
+    service VARCHAR(255) NULL,
+    support_group VARCHAR(255) NULL,
+    application_support_group VARCHAR(255) NULL,
+    vendor_support VARCHAR(255) NULL,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (ci_type_id) REFERENCES ci_types(id) ON DELETE SET NULL
 );
