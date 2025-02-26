@@ -1,7 +1,7 @@
 FROM php:8.1-apache
 
 # Install necessary PHP extensions
-RUN apt-get update && apt-get install -y \
+RUN apt -o "Acquire::https::Verify-Peer=false" update && apt -o "Acquire::https::Verify-Peer=false" install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
