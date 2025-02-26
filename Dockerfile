@@ -5,11 +5,14 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
+    libldap2-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd mysqli pdo pdo_mysql \
-    && a2enmod rewrite
+    && docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu \
+    && docker-php-ext-install gd mysqli pdo pdo_mysql ldap \
+    && a2enmod rewrite \
+    && rm -rf /var/lib/apt/lists/*  # Clean up to reduce image size
 
-# Ensure working directory exists
+# Set working directory
 WORKDIR /var/www/html
 
 # Copy application files from the Git repository

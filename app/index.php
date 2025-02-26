@@ -3,25 +3,32 @@
 require 'db.php';
 
 // Fetch configuration items
-$items = $pdo->query("SELECT ci.id, ci.name, ci.description, ci.service, ci.os_type, ci.os_version, ci.owner, ci.contract FROM configuration_items ci ORDER BY ci.id DESC")->fetchAll(PDO::FETCH_ASSOC);
+$items = $pdo->query("SELECT * FROM configuration_items ORDER BY id DESC")->fetchAll(PDO::FETCH_ASSOC);
 
-// Define available fields
-$available_fields = ['name', 'description', 'service', 'os_type', 'os_version', 'owner', 'contract'];
-$selected_fields = isset($_GET['fields']) ? explode(',', $_GET['fields']) : $available_fields;
+// Define all available fields
+$available_fields = ['name', 'description', 'service', 'os_type', 'os_version', 'owner', 'contract', 'location', 'ip_address', 'serial_number', 'vendor', 'purchase_date', 'warranty_expiry', 'ci_category', 'support_group', 'application_support_group', 'vendor_support'];
+$selected_fields = isset($_GET['fields']) ? explode(',', $_GET['fields']) : ['name', 'description', 'service', 'os_type', 'os_version', 'owner', 'contract'];
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>CMDB System</title>
-    <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid black; padding: 8px; text-align: left; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script>
+        function togglePopup(show) {
+            let popup = document.getElementById("columnPopup");
+            if (show) {
+                popup.style.display = "block";
+            } else {
+                popup.style.display = "none";
+                applyColumnSelection();
+            }
+        }
+
         function toggleField(field) {
             let urlParams = new URLSearchParams(window.location.search);
-            let fields = urlParams.get('fields') ? urlParams.get('fields').split(',') : [<?php echo implode(',', array_map(fn($f) => "'" . $f . "'", $available_fields)); ?>];
+            let fields = urlParams.get('fields') ? urlParams.get('fields').split(',') : [];
             
             if (fields.includes(field)) {
                 fields = fields.filter(f => f !== field);
@@ -30,19 +37,30 @@ $selected_fields = isset($_GET['fields']) ? explode(',', $_GET['fields']) : $ava
             }
             
             urlParams.set('fields', fields.join(','));
-            window.location.search = urlParams.toString();
+            history.replaceState(null, "", "?" + urlParams.toString()); // Update URL without reloading
+        }
+
+        function applyColumnSelection() {
+            location.reload(); // Refresh page to apply selection changes
         }
     </script>
 </head>
 <body>
     <h2>Configuration Management Database</h2>
     
-    <button onclick="window.location.href='add_ci.php'">Add New CI</button>
-    
-    <h3>Toggle Fields</h3>
-    <?php foreach ($available_fields as $field) { ?>
-        <input type="checkbox" onchange="toggleField('<?php echo $field; ?>')" <?php echo in_array($field, $selected_fields) ? 'checked' : ''; ?>> <?php echo ucfirst(str_replace('_', ' ', $field)); ?>
-    <?php } ?>
+    <div class="top-bar">
+        <button onclick="window.location.href='add_ci.php'">Add New CI</button>
+        <button onclick="togglePopup(true)">Select Columns</button>
+        <button class="config-button" onclick="window.location.href='config_page.php'">Manage Configuration</button>
+    </div>
+
+    <div id="columnPopup" class="popup">
+        <h3>Select Columns</h3>
+        <?php foreach ($available_fields as $field) { ?>
+            <input type="checkbox" onchange="toggleField('<?php echo $field; ?>')" <?php echo in_array($field, $selected_fields) ? 'checked' : ''; ?>> <?php echo ucfirst(str_replace('_', ' ', $field)); ?><br>
+        <?php } ?>
+        <button onclick="togglePopup(false)">Done</button>
+    </div>
     
     <h3>Configuration Items</h3>
     <table>

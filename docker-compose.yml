@@ -1,4 +1,3 @@
-
 services:
   web:
     build: .
@@ -9,6 +8,16 @@ services:
       MYSQL_USER: cmdb_user
       MYSQL_PASSWORD: dbpassone
       MYSQL_HOST: db
+
+      # Active Directory (AD) Environment Variables
+      AD_SERVER: "ldap://homehardware.ca"
+      AD_PORT: 389  # Use 636 for LDAPS
+      AD_BASE_DN: "DC=homehardware,DC=ca"
+      AD_USER_DN: "CN=Mackay, Colin,OU=IT,OU=Stj,OU=Home,DC=homehardware,DC=ca"
+      AD_PASSWORD: "RoadRoversonEarth!"
+      AD_GROUP_FILTER: "(objectClass=group)"
+      AD_USER_FILTER: "(objectClass=user)"
+      
     ports:
       - "80:80"
     depends_on:

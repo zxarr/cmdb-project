@@ -31,50 +31,104 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'], $_POST['ci_ty
     exit;
 }
 
+
+
 // Fetch CI types for dropdown
-$ci_types = $pdo->query("SELECT * FROM ci_types")->fetchAll(PDO::FETCH_ASSOC);
+$ci_types = $pdo->query("SELECT id, name FROM ci_types")->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch locations for dropdown
+$locations = $pdo->query("SELECT id, name FROM locations")->fetchAll(PDO::FETCH_ASSOC);
+
+// Fetch vendors for dropdown
+$vendors = $pdo->query("SELECT id, name FROM vendors")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
     <title>Add New Configuration Item</title>
-    <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid black; padding: 8px; text-align: left; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
     <h2>Add New Configuration Item</h2>
     
     <form method="POST">
+        <label>Name:</label>
         <input type="text" name="name" placeholder="Item Name" required>
+
+        <label>CI Type:</label>
         <select name="ci_type_id" required>
-            <option value="Server">Server</option>
-            <option value="Appliance">Appliance</option>
+            <option value="">Select Type</option>
             <?php foreach ($ci_types as $type) { ?>
                 <option value="<?php echo $type['id']; ?>"><?php echo $type['name']; ?></option>
             <?php } ?>
         </select>
+
+        <label>Description:</label>
+        <input type="text" name="description" required>
+
+        <label>Category:</label>
         <select name="ci_category" required>
             <option value="">Select Category</option>
             <option value="Physical">Physical</option>
             <option value="Virtual">Virtual</option>
         </select>
+
+        <label>Owner:</label>
         <input type="text" name="owner" placeholder="Owner" required>
-        <input type="text" name="location" placeholder="Location">
+
+        <label>Location:</label>
+        <select name="location_id">
+            <?php foreach ($locations as $location) { ?>
+                <option value="<?php echo $location['id']; ?>"><?php echo $location['name']; ?></option>
+            <?php } ?>
+        </select>
+
+        <label>IP Address:</label>
         <input type="text" name="ip_address" placeholder="IP Address">
+
+        <label>OS Version:</label>
         <input type="text" name="os_version" placeholder="OS Version">
+
+        <label>Serial Number:</label>
         <input type="text" name="serial_number" placeholder="Serial Number">
-        <input type="text" name="vendor" placeholder="Vendor">
+
+        <label>Vendor:</label>
+        <select name="vendor_id">
+            <?php foreach ($vendors as $vendor) { ?>
+                <option value="<?php echo $vendor['id']; ?>"><?php echo $vendor['name']; ?></option>
+            <?php } ?>
+        </select>
+
+        <label>Contract:</label>
         <input type="text" name="contract" placeholder="Contract">
+
+        <label>OS Type:</label>
         <input type="text" name="os_type" placeholder="OS Type">
+
+        <label>Service:</label>
         <input type="text" name="service" placeholder="Service">
+
+        <label>Support Group:</label>
         <input type="text" name="support_group" placeholder="Support Group">
+
+        <label>Application Support Group:</label>
         <input type="text" name="application_support_group" placeholder="Application Support Group">
-        <input type="text" name="vendor_support" placeholder="Vendor Support">
+
+        <label>Vendor Support:</label>
+        <select name="vendor_support">
+            <option value="">Select Vendor</option>
+            <?php foreach ($vendors as $vendor) { ?>
+                <option value="<?php echo $vendor['id']; ?>"><?php echo $vendor['name']; ?></option>
+            <?php } ?>
+        </select>
+
+        <label>Purchase Date:</label>
         <input type="date" name="purchase_date">
+
+        <label>Warranty Expiry:</label>
         <input type="date" name="warranty_expiry">
+
         <button type="submit">Add Item</button>
     </form>
 
