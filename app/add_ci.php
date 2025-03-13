@@ -5,8 +5,11 @@ require 'db.php';
 // Handle adding a new configuration item
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'], $_POST['ci_type_id'], $_POST['owner'], $_POST['ci_category'])) {
     $stmt = $pdo->prepare("INSERT INTO configuration_items 
-        (name, ci_type_id, description, status, owner, location, ip_address, os_version, serial_number, vendor, purchase_date, warranty_expiry, ci_category, contract, os_type, service, support_group, application_support_group, vendor_support) 
-        VALUES (?, ?, ?, 'Active', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    (name, ci_type_id, description, status, owner, location, ip_address, os_version, serial_number, 
+    vendor, purchase_date, warranty_expiry, ci_category, contract, 
+    os_type, service, support_group, application_support_group, vendor_support, os_support) 
+    VALUES (?, ?, ?, 'Active', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
     $stmt->execute([
         $_POST['name'], 
         $_POST['ci_type_id'], 
@@ -22,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['name'], $_POST['ci_ty
         $_POST['ci_category'],
         $_POST['contract'],
         $_POST['os_type'],
+        $_POST['os_support'],
         $_POST['service'],
         $_POST['support_group'],
         $_POST['application_support_group'],
@@ -105,6 +109,15 @@ $vendors = $pdo->query("SELECT id, name FROM vendors")->fetchAll(PDO::FETCH_ASSO
 
         <label>OS Type:</label>
         <input type="text" name="os_type" placeholder="OS Type">
+
+        <label>OS Support:</label>
+        <select name="os_support">
+            <option value="">Select Vendor</option>
+            <?php foreach ($vendors as $vendor) { ?>
+                <option value="<?php echo $vendor['name']; ?>"><?php echo $vendor['name']; ?></option>
+            <?php } ?>
+        </select>
+
 
         <label>Service:</label>
         <input type="text" name="service" placeholder="Service">

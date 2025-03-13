@@ -37,11 +37,11 @@ $selected_fields = isset($_GET['fields']) ? explode(',', $_GET['fields']) : ['na
             }
             
             urlParams.set('fields', fields.join(','));
-            history.replaceState(null, "", "?" + urlParams.toString()); // Update URL without reloading
+            history.replaceState(null, "", "?" + urlParams.toString());
         }
 
         function applyColumnSelection() {
-            location.reload(); // Refresh page to apply selection changes
+            location.reload();
         }
     </script>
 </head>
@@ -72,7 +72,15 @@ $selected_fields = isset($_GET['fields']) ? explode(',', $_GET['fields']) : ['na
         <?php foreach ($items as $item) { ?>
             <tr>
                 <?php foreach ($selected_fields as $field) { ?>
-                    <td><?php echo $item[$field] ?? ''; ?></td>
+                    <td>
+                        <?php if ($field === 'name'): ?>
+                            <a href="manage_ci.php?id=<?= $item['id'] ?>">
+                                <?= htmlspecialchars($item['name']) ?>
+                            </a>
+                        <?php else: ?>
+                            <?= htmlspecialchars($item[$field] ?? '') ?>
+                        <?php endif; ?>
+                    </td>
                 <?php } ?>
             </tr>
         <?php } ?>

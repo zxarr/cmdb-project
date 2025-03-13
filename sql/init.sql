@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS configuration_items (
     ci_category ENUM('Physical', 'Virtual') NOT NULL,
     contract VARCHAR(255) NULL,
     os_type VARCHAR(100) NULL,
+    os_support VARCHAR(255) NULL,
     service VARCHAR(255) NULL,
     support_group VARCHAR(255) NULL,
     application_support_group VARCHAR(255) NULL,
@@ -81,11 +82,6 @@ CREATE TABLE IF NOT EXISTS locations (
     is_default BOOLEAN DEFAULT FALSE
 );
 
--- Insert sample locations
-INSERT INTO locations (name, street_address, city, state, postal_code, country, contact_number, contact_email, is_default) VALUES
-('New York Office', '123 Main St', 'New York', 'NY', '10001', 'USA', '555-1234', 'contact@nyoffice.com', TRUE),
-('San Francisco Office', '456 Market St', 'San Francisco', 'CA', '94105', 'USA', '555-5678', 'contact@sfoffice.com', FALSE);
-
 -- Vendors Table
 CREATE TABLE IF NOT EXISTS vendors (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -100,7 +96,9 @@ CREATE TABLE IF NOT EXISTS vendors (
     is_default BOOLEAN DEFAULT FALSE
 );
 
--- Insert sample vendors
-INSERT INTO vendors (name, contact_person, contact_phone, contact_email, support_website, support_phone, support_email, sales_email, is_default) VALUES
-('TechCorp', 'John Doe', '555-1234', 'support@techcorp.com', 'https://techcorp.com/support', '555-5678', 'help@techcorp.com', 'sales@techcorp.com', TRUE),
-('NetSolutions', 'Jane Smith', '555-8765', 'contact@netsolutions.com', 'https://netsolutions.com/help', '555-4321', 'support@netsolutions.com', 'sales@netsolutions.com', FALSE);
+
+-- Include OS Tables
+SOURCE /docker-entrypoint-initdb.d/os_tables.sql;
+
+-- Include some Demo Tables
+SOURCE /docker-entrypoint-initdb.d/z_demo_data.sql;
